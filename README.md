@@ -3,16 +3,22 @@
 
 ## Overview
 This project uses a R script to get and clean data, preparing it on a tidy format for analysis. It will generate one final file called "tiny_data.txt" containig information about the arithimetic mean of each variable, grouped by participant and activity.
+
 The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones" and the data was obtained at "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 
 ## Information about the final file (Codebook)
 The final file generated has 180 data rows (measurements) and 68 columns (variables). The first 2 columns of this file ("participant" and "activity") represents an identification of each participant of the study
-and the activity observed in the measurement. The other columns represents the arithimetic mean of each variable measured on the study. 
+and the activity observed in the measurement. The other columns represents the arithimetic mean of each variable measured on the study.
+
 Each measurement was grouped by participant and activity.
+
 There were 30 participants on the study, identified by labels "participant_1" to "participant_30" and the acitities are classified in six (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING).
+
 There are two major variable domains which are variables started with "t" time representing "time" values and variables started with "f" representing frequency values.
+
 Variables containing accelerometer and gyroscope on the name refere to values measured by an accelerometer sensor and a gyroscope.
+
 The letters X,Y and Z at the end of the variable names represent de axis related to the measurement.
 
 

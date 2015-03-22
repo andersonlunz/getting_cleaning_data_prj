@@ -80,7 +80,7 @@ merged_df <- merged_df[,!(names(merged_df) %in% c("activity_id"))]
 ## Assignment 4 ##
 ##################
 # Renamed some abreviations in some column names 
-colnames(merged_df) <- gsub("Acc", "Accelerator", colnames(merged_df))
+colnames(merged_df) <- gsub("Acc", "Accelerometer", colnames(merged_df))
 colnames(merged_df) <- gsub("Mag", "Magnitude", colnames(merged_df))
 colnames(merged_df) <- gsub("Gyro", "Gyroscope", colnames(merged_df))
 

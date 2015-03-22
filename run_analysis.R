@@ -1,3 +1,5 @@
+library(data.table)
+
 # Create a temporary directory (assuming that the script is running on linux/unix machines)
 dir_project <- "/tmp/project"
 if(!file.exists(dir_project)){dir.create(dir_project)}
@@ -91,3 +93,9 @@ colnames(merged_df) <- gsub("Gyro", "Gyroscope", colnames(merged_df))
 # Create a tidy data set using the data.table
 merged_table <- data.table(merged_df)
 tidy_data <- merged_table[, lapply(.SD, mean), by = 'participant,activity']
+
+
+###########################
+## Create Tidy Data file ##
+###########################
+write.table(tidy_data, file = "tidy_data.txt", row.names = FALSE)

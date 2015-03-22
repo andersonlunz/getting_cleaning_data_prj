@@ -1,10 +1,5 @@
 library(data.table)
 
-# Create a temporary directory (assuming that the script is running on linux/unix machines)
-dir_project <- "/tmp/project"
-if(!file.exists(dir_project)){dir.create(dir_project)}
-setwd(dir_project)
-
 # Download zip file
 fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(fileUrl,destfile="Dataset.zip",method="curl")

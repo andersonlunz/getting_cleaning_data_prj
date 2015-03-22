@@ -26,16 +26,14 @@ participant_test_df <- read.table("subject_test.txt", header=FALSE, col.names = 
 participant_train_df <- read.table("subject_train.txt", header=FALSE, col.names = c("participant_id"))
 activity_df <- read.table("activity_labels.txt", header=FALSE, col.names = c("id","activity"))
 
-# Add the 'activity_id' column to both x_train and x_test data sets
+# Add the 'activity_id' column to both x_train and x_test data sets and add the 'activity_id' column to the vector of column names
 x_train_df$activity_id <- y_train_df[,1]
 x_test_df$activity_id <- y_test_df[,1]
+column_names_vector <- append(column_names_vector, "activity_id", after = length(column_names_vector))
 
-# Add the 'participant' column with the participant identification
+# Add the 'participant' column with the participant identification and add the 'participant' column to the vector of column names
 x_test_df$participant <- with(participant_test_df, paste("participant", participant_id, sep="_"))
 x_train_df$participant <- with(participant_train_df, paste("participant", participant_id, sep="_"))
-
-# Add the 'activity_id' and 'participant' columns to the vector of column names
-column_names_vector <- append(column_names_vector, "activity_id", after = length(column_names_vector))
 column_names_vector <- append(column_names_vector, "participant", after = length(column_names_vector))
 
 
@@ -64,7 +62,7 @@ participant_id_column_index <- grep("participant", column_names_vector, ignore.c
 # Concatenate and sort all indexes found on variables 'mean_columns_indexes' and 'std_columns_indexes'
 columns_to_use <- sort(c(mean_columns_indexes, std_columns_indexes, activity_id_column_index, participant_id_column_index))
 
-# Filter the merged data frame, using only the columns related to 'mean' and 'standard deviation' functions
+# Filter the merged data frame, using only the columns related to 'mean' and 'standard deviation' functions and columns 'activity_id' and 'participant'
 filtered_df <- appended_df[,columns_to_use]
 
 

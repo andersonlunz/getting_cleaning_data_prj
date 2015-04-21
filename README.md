@@ -78,4 +78,4 @@ The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Acti
 
 
 > 11. As the last step, the script generates the final file called "tidy_data.txt"
-write.table(tidy_data, file = "tidy_data.txt", row.names = FALSE)
+>> write.table(tidy_data, file = "tidy_data.txt", row.names = FALSE)

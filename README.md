@@ -2,90 +2,80 @@
 # Getting and Cleaning Data Course - Johns Hopkins - Coursera
 
 ## Overview
-This project uses a R script to get and clean data, preparing it on a tidy format for analysis. It will generate one final file called "tiny_data.txt" containig information about the arithimetic mean of each variable, grouped by participant and activity.
+This project uses a R script to get and clean data, preparing it on a tidy format for later analysis. It will generate one final file called "tiny_data.txt" containig information about the arithimetic mean of each variable, grouped by activity and subject.
 
 The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones" and the data was obtained at "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 
-## Information about the final file (Codebook)
-The final file generated has 180 data rows (measurements) and 68 columns (variables). The first 2 columns of this file ("participant" and "activity") represents an identification of each participant of the study
-and the activity observed in the measurement. The other columns represents the arithimetic mean of each variable measured on the study.
+## The Manipulations to Generate the Final File - Explaining How the Script Works
 
-Each measurement was grouped by participant and activity.
-
-There were 30 participants on the study, identified by labels "participant_1" to "participant_30" and the acitities are classified in six (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING).
-
-There are two major variable domains which are variables started with "t" time representing "time" values and variables started with "f" representing frequency values.
-
-Variables containing accelerometer and gyroscope on the name refere to values measured by an accelerometer sensor and a gyroscope.
-
-The letters X,Y and Z at the end of the variable names represent de axis related to the measurement.
-
-
-## The manipulations to generate the final file - Explaining How the script works
-
-> 1. The first step is load the library data.table which will be used by the script on its final part
->> library(data.table)
-
-> 2. After the script downloads automatically the zip file to the current working directory
+> 1. As a first step, the script sets the working directory and download and unzip the source data set.
+>> setwd("/tmp/getting_cleaning_data")
 >> fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 >> download.file(fileUrl,destfile="Dataset.zip",method="curl")
-
-> 3. It uncompresses the downloaded file "Dataset.zip" removing the zip file paths(parameter 'junkpaths = TRUE'), so all files will be extracted on the working directory
 >> unzip("Dataset.zip", junkpaths = TRUE)
 
-> 4. It reads the features data set to a data frame and also creates a vector called 'column_names_vector' that will hold all the column names for the test and training data sets
+
+> 2. Then it loads the features data sets in a data frame. The features data set will be used to give names for the variables in the x_train and x_test data sets which contains all observations of the study. 
 >> features_df <- read.table("features.txt", header=FALSE, col.names=c("id","feature_name"))
->> column_names_vector <- as.vector(features_df[,"feature_name"])
 
-> 5. It then reads all the important data set files into data frames
->> y_test_df <- read.table("y_test.txt", header=FALSE, col.names = c("id"))
->> x_test_df <- read.table("X_test.txt", header=FALSE, col.names=column_names_vector)
->> y_train_df <- read.table("y_train.txt", header=FALSE, col.names = c("id"))
->> x_train_df <- read.table("X_train.txt", header=FALSE, col.names=column_names_vector)
->> participant_test_df <- read.table("subject_test.txt", header=FALSE, col.names = c("participant_id"))
->> participant_train_df <- read.table("subject_train.txt", header=FALSE, col.names = c("participant_id"))
->> activity_df <- read.table("activity_labels.txt", header=FALSE, col.names = c("id","activity"))
 
-> 6. It adds a new column called 'activity_id' in the x_test_df and x_train_df data frames. This column has the id of the activity(WALKING, STANDING, etc...) which will be merged later. The new column is also added to the 'column_names_vector'
->> x_train_df$activity_id <- y_train_df[,1]
->> x_test_df$activity_id <- y_test_df[,1]
->> column_names_vector <- append(column_names_vector, "activity_id", after = length(column_names_vector))
+> 3. Then it loads the main data sets in data frames and rename the variables in each data frame using the features data frame created on step 2 above. The main data sets are x_train and x_test which contains all observations of the study. 
+>> x_train_df <- read.table("X_train.txt", header=FALSE)
+>> names(x_train_df) <- features_df$feature_name
 
-> 7. It adds a column in the x_test_df and x_train_df data frames identifying each measuremnet with a participant. The participant name will follow the pattern 'participant_id'. The new column is also added to the 'column_names_vector'
->> x_test_df$participant <- with(participant_test_df, paste("participant", participant_id, sep="_"))
->> x_train_df$participant <- with(participant_train_df, paste("participant", participant_id, sep="_"))
->> column_names_vector <- append(column_names_vector, "participant", after = length(column_names_vector))
+>> x_test_df <- read.table("X_test.txt", header=FALSE)
+>> names(x_test_df) <- features_df$feature_name
 
-> 8. Then, for the assignment 1 it appends the two data frames (x_train_df and x_test_df)
+
+> 4. The script adds the activity_id column to x_train and x_test data frames. The files "y_train.txt" and "y_test.txt" contains the activity ids for each observation in x_train and x_test data sets respectively.
+>> temp <- read.table("y_train.txt", header=FALSE)
+>> x_train_df$activity_id <- temp[,1]
+
+>> temp <- read.table("y_test.txt", header=FALSE)
+>> x_test_df$activity_id <- temp[,1]
+
+
+> 5. The script then adds the subject who performed the activity for each observation. The files "subject_train.txt" and "subject_test.txt" have the information of subject for each observation in x_train and x_test data sets respectively. In order to have a more readable data, the script modifies the subject information (which is an integer from 1 to 30) and prepends a "subject_" string before the subject id.
+>> temp <- read.table("subject_train.txt", header=FALSE, col.names = c("subject_id"))
+>> x_train_df$subject <- with(temp, paste("subject", sprintf("%02d",subject_id), sep="_"))
+
+>> temp <- read.table("subject_test.txt", header=FALSE, col.names = c("subject_id"))
+>> x_test_df$subject <- with(temp, paste("subject", sprintf("%02d",subject_id), sep="_"))
+
+
+> 6. With the main data frames x_train_df and x_test_df ready to use, the script executes the task of the assignment 1. It consists on append the two main data frames to create a unique data frame to be used by the subsequent assignments.
 >> appended_df <- rbind(x_train_df, x_test_df)
 
-> 9. For the assignement 2 it creates several vectors with all the column indexes for the columns that will be filtered, that means:
->> It gets all the indexes of columns that use the mean function using:
->>> mean_columns_indexes <- grep("\\-mean\\(\\)", column_names_vector, ignore.case=TRUE)
->> It gets all the indexes of columns that use the 'standard deviation' function using:
->>> std_columns_indexes <- grep("\\-std\\(\\)", column_names_vector, ignore.case=TRUE)
->> It gets also the indexes of 'activity_id' and 'participant' columns which will also be included when it will filter the columns
->>> activity_id_column_index <- grep("activity_id", column_names_vector, ignore.case=TRUE)
->>> participant_id_column_index <- grep("participant", column_names_vector, ignore.case=TRUE)
->> It then concatenates and sorts the indexes to get an ordered list of indexes to filter the data frame appended_df
->>> columns_to_use <- sort(c(mean_columns_indexes, std_columns_indexes, activity_id_column_index, participant_id_column_index))
 
-> 10. So, to finish assignment 2, it finally filters the data frame appended_df using the vector 'columns_to_use' above
->> filtered_df <- appended_df[,columns_to_use]
+> 7. The script execute the assignment 2 witch consists in cleanup the recently appended data frame called appended_df and create a new data frame only with columns related to measurements on the mean and standard deviation. It also keeps the columns "activity_id" and "subject" which will be used in the following assignments.
+>> mean_std_columns <- grep("mean\\(\\)|std\\(\\)", names(appended_df))
+>> columns_to_select <- c(mean_std_columns, grep("activity_id", names(appended_df)), grep("subject", names(appended_df)))
+>> clean_df <- subset(appended_df, select=columns_to_select)
 
-> 11. For the assignment 3, it joins the activity data frame with the recently created filtered_df (above) to get the activity labels in each measurement. It also removes the 'activity_id' from the recent created data frame merged_df just to keep the data frame clean
->> merged_df = merge(filtered_df, activity_df, by.x="activity_id", by.y="id")
->> merged_df <- merged_df[,!(names(merged_df) %in% c("activity_id"))]
 
-> 12. For assignment 4, it renames some abreviations in columns to try to make them clear for the user
->> colnames(merged_df) <- gsub("Acc", "Accelerator", colnames(merged_df))
->> colnames(merged_df) <- gsub("Mag", "Magnitude", colnames(merged_df))
->> colnames(merged_df) <- gsub("Gyro", "Gyroscope", colnames(merged_df))
+> 8. For the assignment 3 the script first loads the library dplyr which will be used to manipulate the "clean_df" data frame. After that the script will replace the activity_id variable on data frame "clean_df" for the real activity labels which are found on file "activity_labels.txt". It will load the "activity_labels.txt" file on a data frame and then join it with the "clean_df" data frame. This will add the activity labels variable on the "clean_df" data frame for each observation. To keep the new data frame clean, the script removes the "activity_id" variable from the joined data frame.
+>> library(dplyr)
+>> activity_df <- read.table("activity_labels.txt", header=FALSE, col.names = c("id","activity"))
+>> merged_df <- merge(clean_df, activity_df, by.x="activity_id", by.y="id")
+>> clean_df <- select(merged_df, -(activity_id))
 
-> 13. For assignment 5 it creates a tidy data set grouping the measurements by participant and activity and applying the function 'mean' to each variable
->> merged_table <- data.table(merged_df)
->> tidy_data <- merged_table[, lapply(.SD, mean), by = 'participant,activity']
 
-> 14. To finish it creates a file int the working directory, using the tiny data set created above
->> write.table(tidy_data, file = "tidy_data.txt", row.names = FALSE)
+> 9. For the assignment 4, the script replaces some variable names with more descriptive names.
+>> names(clean_df) <- gsub("^t", "time", names(clean_df))
+>> names(clean_df) <- gsub("^f", "frequency", names(clean_df))
+>> names(clean_df) <- gsub("Acc", "Accelerometer", names(clean_df))
+>> names(clean_df) <- gsub("Gyro", "Gyroscope", names(clean_df))
+>> names(clean_df) <- gsub("Mag", "Magnitude", names(clean_df))
+>> names(clean_df) <- gsub("BodyBody", "Body", names(clean_df))
+
+
+> 10. For the assignment 5, it first loads the library "data.table" and then the script creates a tidy data set grouping the results by activity and subject and then order the result set by activity and subject.
+>> library(data.table)
+>> clean_table <- data.table(clean_df)
+>> tidy_data <- clean_table[, lapply(.SD, mean), by = 'activity,subject']
+>> tidy_data <- tidy_data[order(activity, subject)]
+
+
+> 11. As the last step, the script generates the final file called "tidy_data.txt"
+write.table(tidy_data, file = "tidy_data.txt", row.names = FALSE)

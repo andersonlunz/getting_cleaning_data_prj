@@ -1,35 +1,55 @@
-library(data.table)
+###############################################################################
+## First Download the zip file data set and extract it on working directory  ##
+## NOTE: Set your working directory before downloading the file if you want. ##
+###############################################################################
+setwd("/tmp/getting_cleaning_data")
 
-# Download zip file
 fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(fileUrl,destfile="Dataset.zip",method="curl")
 
 # Open zip files with all the files in the same directory
 unzip("Dataset.zip", junkpaths = TRUE)
 
-# Read the features data set and create a vector with the feature names 
-# (it has the same number of columns of the x_train and x_test data sets)
+
+################################################################################################
+## Read the Train and Test data sets. Adjust data sets before work on the project assignments ##
+################################################################################################
+
+# The file "features.txt" contains a list of the column names to be applied to x_train and x_test data sets.
+# I'll read it to a data frame and change the x_train and x_test column names a few steps below
 features_df <- read.table("features.txt", header=FALSE, col.names=c("id","feature_name"))
-column_names_vector <- as.vector(features_df[,"feature_name"])
 
-# Read the rest of data sets
-y_test_df <- read.table("y_test.txt", header=FALSE, col.names = c("id"))
-x_test_df <- read.table("X_test.txt", header=FALSE, col.names=column_names_vector)
-y_train_df <- read.table("y_train.txt", header=FALSE, col.names = c("id"))
-x_train_df <- read.table("X_train.txt", header=FALSE, col.names=column_names_vector)
-participant_test_df <- read.table("subject_test.txt", header=FALSE, col.names = c("participant_id"))
-participant_train_df <- read.table("subject_train.txt", header=FALSE, col.names = c("participant_id"))
-activity_df <- read.table("activity_labels.txt", header=FALSE, col.names = c("id","activity"))
 
-# Add the 'activity_id' column to both x_train and x_test data sets and add the 'activity_id' column to the vector of column names
-x_train_df$activity_id <- y_train_df[,1]
-x_test_df$activity_id <- y_test_df[,1]
-column_names_vector <- append(column_names_vector, "activity_id", after = length(column_names_vector))
+# So, below I'll read the x_train and x_test data sets and then set their column names
+# using the "feature_name" column of the features_df data frame
+x_train_df <- read.table("X_train.txt", header=FALSE)
+names(x_train_df) <- features_df$feature_name
 
-# Add the 'participant' column with the participant identification and add the 'participant' column to the vector of column names
-x_test_df$participant <- with(participant_test_df, paste("participant", participant_id, sep="_"))
-x_train_df$participant <- with(participant_train_df, paste("participant", participant_id, sep="_"))
-column_names_vector <- append(column_names_vector, "participant", after = length(column_names_vector))
+x_test_df <- read.table("X_test.txt", header=FALSE)
+names(x_test_df) <- features_df$feature_name
+
+
+# Now we need to add the activity_id column to x_train and x_test data frames. 
+# This will add the acivity id for each observation on the data sets.
+# The files y_train.txt and y_test.txt contains the activity ids for each observation in x_train and x_test 
+# data sets respectively.
+temp <- read.table("y_train.txt", header=FALSE)
+x_train_df$activity_id <- temp[,1]
+
+temp <- read.table("y_test.txt", header=FALSE)
+x_test_df$activity_id <- temp[,1]
+
+
+# One more step is to add the subject who performed the activity for each observation.
+# I'll create another column called subject which will contain the subject identification.
+# I'll modify the id prepending a "subject_" string before the id, just to be more readable.
+# The files subject_train.txt and subject_test.txt contains the subject identification for each 
+# observation in x_train and x_test data sets respectively. 
+temp <- read.table("subject_train.txt", header=FALSE, col.names = c("subject_id"))
+x_train_df$subject <- with(temp, paste("subject", sprintf("%02d",subject_id), sep="_"))
+
+temp <- read.table("subject_test.txt", header=FALSE, col.names = c("subject_id"))
+x_test_df$subject <- with(temp, paste("subject", sprintf("%02d",subject_id), sep="_"))
 
 
 ##################
@@ -42,53 +62,54 @@ appended_df <- rbind(x_train_df, x_test_df)
 ##################
 ## Assignment 2 ##
 ##################
-# Create a vector with all feature names that match the 'mean' function
-mean_columns_indexes <- grep("\\-mean\\(\\)", column_names_vector, ignore.case=TRUE)
+# First get all column names that are related to measurements on the mean and standard deviation
+mean_std_columns <- grep("mean\\(\\)|std\\(\\)", names(appended_df))
 
-# Create a vector with all indexes of the feature names that match the 'standard deviation' function
-std_columns_indexes <- grep("\\-std\\(\\)", column_names_vector, ignore.case=TRUE)
+# Add the "activity_id" and "subject" columns
+columns_to_select <- c(mean_std_columns, grep("activity_id", names(appended_df)), grep("subject", names(appended_df)))
 
-# Create a vector with the 'activity_id' index. We need to keep this column for future use.
-activity_id_column_index <- grep("activity_id", column_names_vector, ignore.case=TRUE)
-
-# Create a vector with the 'participant' index. We need to keep this column for future use.
-participant_id_column_index <- grep("participant", column_names_vector, ignore.case=TRUE)
-
-# Concatenate and sort all indexes found on variables 'mean_columns_indexes' and 'std_columns_indexes'
-columns_to_use <- sort(c(mean_columns_indexes, std_columns_indexes, activity_id_column_index, participant_id_column_index))
-
-# Filter the merged data frame, using only the columns related to 'mean' and 'standard deviation' functions and columns 'activity_id' and 'participant'
-filtered_df <- appended_df[,columns_to_use]
+# Create a clean data frame with only the mean and standard deviation columns plus 
+# "activity_id" and "subject" columns
+clean_df <- subset(appended_df, select=columns_to_select)
 
 
 ##################
 ## Assignment 3 ##
 ##################
-# Join the activity data set and the filtered data set
-merged_df = merge(filtered_df, activity_df, by.x="activity_id", by.y="id")
+library(dplyr)
+# First read the activity labels to a data frame
+activity_df <- read.table("activity_labels.txt", header=FALSE, col.names = c("id","activity"))
 
-# Remove the activity_id column as we already added the activity column (just to keep the data set clean)
-merged_df <- merged_df[,!(names(merged_df) %in% c("activity_id"))]
+# Then merge the clean_df data frame with the activity_df data frame
+merged_df <- merge(clean_df, activity_df, by.x="activity_id", by.y="id")
 
+# To keep the new data frame clean, I'll remove the activity_id column from merged_df
+clean_df <- select(merged_df, -(activity_id))
 
 ##################
 ## Assignment 4 ##
 ##################
-# Renamed some abreviations in some column names 
-colnames(merged_df) <- gsub("Acc", "Accelerometer", colnames(merged_df))
-colnames(merged_df) <- gsub("Mag", "Magnitude", colnames(merged_df))
-colnames(merged_df) <- gsub("Gyro", "Gyroscope", colnames(merged_df))
+# Replace some variable names with a more descriptive text
+names(clean_df) <- gsub("^t", "time", names(clean_df))
+names(clean_df) <- gsub("^f", "frequency", names(clean_df))
+names(clean_df) <- gsub("Acc", "Accelerometer", names(clean_df))
+names(clean_df) <- gsub("Gyro", "Gyroscope", names(clean_df))
+names(clean_df) <- gsub("Mag", "Magnitude", names(clean_df))
+names(clean_df) <- gsub("BodyBody", "Body", names(clean_df))
 
 
 ##################
 ## Assignment 5 ##
 ##################
-# Create a tidy data set using the data.table
-merged_table <- data.table(merged_df)
-tidy_data <- merged_table[, lapply(.SD, mean), by = 'participant,activity']
-
+# Create a tidy data set grouping the results by activity and subject and then order the result set
+# by activity and subject
+library(data.table)
+clean_table <- data.table(clean_df)
+tidy_data <- clean_table[, lapply(.SD, mean), by = 'activity,subject']
+tidy_data <- tidy_data[order(activity, subject)]
 
 ###########################
-## Create Tidy Data file ##
+## Create Tidy Data File ##
 ###########################
+# Write the result set in a file
 write.table(tidy_data, file = "tidy_data.txt", row.names = FALSE)

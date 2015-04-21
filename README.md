@@ -23,7 +23,7 @@ The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Acti
 > 3. Then it loads the main data sets in data frames and rename the variables in each data frame using the features data frame created on step 2 above. The main data sets are x_train and x_test which contains all observations of the study. 
 >> x_train_df <- read.table("X_train.txt", header=FALSE)
 >> names(x_train_df) <- features_df$feature_name
-
+>> 
 >> x_test_df <- read.table("X_test.txt", header=FALSE)
 >> names(x_test_df) <- features_df$feature_name
 
@@ -31,7 +31,7 @@ The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Acti
 > 4. The script adds the activity_id column to x_train and x_test data frames. The files "y_train.txt" and "y_test.txt" contains the activity ids for each observation in x_train and x_test data sets respectively.
 >> temp <- read.table("y_train.txt", header=FALSE)
 >> x_train_df$activity_id <- temp[,1]
-
+>> 
 >> temp <- read.table("y_test.txt", header=FALSE)
 >> x_test_df$activity_id <- temp[,1]
 
@@ -39,7 +39,7 @@ The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Acti
 > 5. The script then adds the subject who performed the activity for each observation. The files "subject_train.txt" and "subject_test.txt" have the information of subject for each observation in x_train and x_test data sets respectively. In order to have a more readable data, the script modifies the subject information (which is an integer from 1 to 30) and prepends a "subject_" string before the subject id.
 >> temp <- read.table("subject_train.txt", header=FALSE, col.names = c("subject_id"))
 >> x_train_df$subject <- with(temp, paste("subject", sprintf("%02d",subject_id), sep="_"))
-
+>> 
 >> temp <- read.table("subject_test.txt", header=FALSE, col.names = c("subject_id"))
 >> x_test_df$subject <- with(temp, paste("subject", sprintf("%02d",subject_id), sep="_"))
 

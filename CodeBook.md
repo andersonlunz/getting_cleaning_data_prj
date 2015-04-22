@@ -1,5 +1,5 @@
 ## Information About the Tidy Data Set (Codebook)
-The tidy data set generated on file "tidy_data.txt" was based on the study detailed at "http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones". The source data set used to generate this tidy data set was obtained at "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip".
+The tidy data set generated on file "tidy_data.txt" was based on the study detailed at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones. The source data set used to generate this tidy data set was obtained at https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip.
 
 There study was conducted with 30 participants with age between 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone on the waist. Data from the smartphone sensors were captured in 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz.
 

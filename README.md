@@ -4,7 +4,7 @@
 ## Overview
 This project uses a R script to get and clean data, preparing it on a tidy format for later analysis. It will generate one final file called "tiny_data.txt" containig information about the arithimetic mean of each variable, grouped by activity and subject.
 
-The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones" and the data was obtained at "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+The source of the study is on http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones and the data was obtained at https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip.
 
 
 ## The Manipulations to Generate the Final File - Explaining How the Script Works

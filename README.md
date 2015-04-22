@@ -9,11 +9,11 @@ The source of the study is on "http://archive.ics.uci.edu/ml/datasets/Human+Acti
 
 ## The Manipulations to Generate the Final File - Explaining How the Script Works
 
-> 1. As a first step, the script sets the working directory and download and unzip the source data set.
-    * setwd("/tmp/getting_cleaning_data")
-    * fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-    * download.file(fileUrl,destfile="Dataset.zip",method="curl")
-    * unzip("Dataset.zip", junkpaths = TRUE)
+1. As a first step, the script sets the working directory and download and unzip the source data set.
+  * setwd("/tmp/getting_cleaning_data")
+  * fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+  * download.file(fileUrl,destfile="Dataset.zip",method="curl")
+  * unzip("Dataset.zip", junkpaths = TRUE)
 
 
 > 2. Then it loads the features data sets in a data frame. The features data set will be used to give names for the variables in the x_train and x_test data sets which contains all observations of the study. 

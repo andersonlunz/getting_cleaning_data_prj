@@ -27,7 +27,7 @@ The source of the study is on http://archive.ics.uci.edu/ml/datasets/Human+Activ
  * names(x_test_df) <- features_df$feature_name
 
 
-4. The script adds the activity_id column to x_train and x_test data frames. The files "y_train.txt" and "y_test.txt" contains the activity ids for each observation in x_train and x_test data sets respectively.
+4. The script adds the activity_id column to x_train and x_test data frames. The files "y_train.txt" and "y_test.txt" contains the activity ids for each observation in x_train and x_test data sets respectively. As the files y_train.txt and y_test.txt have one column only, the script reads them in a temporary data frame and then it creates a new column called "activity_id" on x_train and x_test data frames.
  * temp <- read.table("y_train.txt", header=FALSE)
  * x_train_df$activity_id <- temp[,1]
  * temp <- read.table("y_test.txt", header=FALSE)

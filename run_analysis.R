@@ -33,6 +33,8 @@ names(x_test_df) <- features_df$feature_name
 # This will add the acivity id for each observation on the data sets.
 # The files y_train.txt and y_test.txt contains the activity ids for each observation in x_train and x_test 
 # data sets respectively.
+# As the files y_train.txt and y_test.txt have one column only, I read them in a temporary data frame and then
+# I create a new column called "activity_id" on x_train and x_test data frames.
 temp <- read.table("y_train.txt", header=FALSE)
 x_train_df$activity_id <- temp[,1]
 

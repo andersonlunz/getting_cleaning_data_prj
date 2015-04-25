@@ -1,14 +1,16 @@
-## Information About the Tidy Data Set (Codebook)
+## Codebook
+
+## Information About the Tidy Data Set
 The tidy data set generated on file "tidy_data.txt" was based on the study detailed at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones. The source data set used to generate this tidy data set was obtained at https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip.
 
-There study was conducted with 30 participants with age between 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone on the waist. Data from the smartphone sensors were captured in 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz.
+The study was conducted with 30 participants with age between 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone on the waist. Data from the smartphone sensors were captured in 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz.
 
 The tidy data set "tidy_data.txt" has 180 observations (measurements) and 68 columns (variables). The data set is grouped by its first two columns ("activity" and "subject") which represent the identification of each participant of the study and the activity observed in the measurement. The other columns represents the arithimetic mean of each variable measured on the study.
 
 
 
 
-There are two major variable domains which are variables started with "time" representing "time" values and variables started with "frequency" representing frequency values.
+There are two major variable domains which are variables started with "time" representing time values and variables started with "frequency" representing frequency values.
 
 Variables containing accelerometer and gyroscope on the name refere to values measured by an accelerometer sensor and a gyroscope.
 

@@ -16,7 +16,7 @@ The source of the study is on http://archive.ics.uci.edu/ml/datasets/Human+Activ
  * unzip("Dataset.zip", junkpaths = TRUE)
 
 
-2. Then it loads the features data sets in a data frame. The features data set will be used to give names for the variables in the x_train and x_test data sets which contains all observations of the study. 
+2. Then it loads the features data set in a data frame. The features data set will be used to give names for the variables in the x_train and x_test data sets which contains all observations of the study. 
  * features_df <- read.table("features.txt", header=FALSE, col.names=c("id","feature_name"))
 
 
@@ -27,7 +27,7 @@ The source of the study is on http://archive.ics.uci.edu/ml/datasets/Human+Activ
  * names(x_test_df) <- features_df$feature_name
 
 
-4. The script adds the activity_id column to x_train and x_test data frames. The files "y_train.txt" and "y_test.txt" contains the activity ids for each observation in x_train and x_test data sets respectively. As the files y_train.txt and y_test.txt have one column only, the script reads them in a temporary data frame and then it creates a new column called "activity_id" on x_train and x_test data frames.
+4. The script adds the "activity_id" column to x_train and x_test data frames. The files "y_train.txt" and "y_test.txt" contains the activity ids for each observation in x_train and x_test data sets respectively. As the files y_train.txt and y_test.txt have one column only, the script reads them in a temporary data frame and then it creates a new column called "activity_id" on x_train and x_test data frames.
  * temp <- read.table("y_train.txt", header=FALSE)
  * x_train_df$activity_id <- temp[,1]
  * temp <- read.table("y_test.txt", header=FALSE)

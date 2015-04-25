@@ -20,9 +20,7 @@ The letters X,Y and Z at the end of the variable names represent de axis related
 Variables types on this data set:
 
 activity                                      : *Factor w/ 6 levels "LAYING", "SITTING", "STANDING". "WALKING", "WALKING_DOWNSTAIRS", "WALKING_UPSTAIRS"*
-
 subject                                       : *Character  from "subject_01" to "subject_30"*
-
 timeBodyAccelerometer-mean()-X                : *Numeric*  
 timeBodyAccelerometer-mean()-Y                : *Numeric*  
 timeBodyAccelerometer-mean()-Z                : *Numeric*  
